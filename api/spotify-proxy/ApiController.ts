@@ -87,6 +87,7 @@ class ApiController {
             // Add CORS Headers
             if (this.routes.CorsEnabled) {
                 let [origin, addVary, originMatch] = this.checkOrigin(context);
+                response.headers['Access-Control-Allow-Credentials'] = 'false';
                 response.headers['Access-Control-Allow-Origin'] = origin;
                 response.headers['Access-Control-Allow-Methods'] = this.getAllowedMethods();
                 response.headers['Access-Control-Allow-Headers'] = this.corsHeaders.join(', ');
@@ -177,7 +178,7 @@ class ApiController {
             let totalMs = finalTimestap - initTimestamp;
             let handlerMs = finalTimestap - handlerTimestamp;
             context.log.info(`Handler execution: ${handlerMs} ms, Total execution: ${totalMs} ms`);
-            return this.finalizeResponse(handlerRes.status, handlerRes.body, response);
+            return this.finalizeResponse(handlerRes.status, handlerRes.body, response, onlyHead);
         } catch (e) {
             context.log.error(`Controller Execution failed with exception: `);
             context.log.error(e);
@@ -185,14 +186,20 @@ class ApiController {
         }
     }
 
-    private finalizeResponse(status: number, data: object | undefined, response: HttpResponse): HttpResponse {
-        let stringified = JSON.stringify(data);
+    private finalizeResponse(status: number, data: object | undefined, response: HttpResponse, onlyHead?: boolean): HttpResponse {
         response.status = status;
-        response.body = stringified;
+        let stringified = JSON.stringify(data);
         if (stringified !== undefined) {
-            response.headers['Content-Type'] = 'application/json';
-            response.headers['Content-Length'] = stringified.length.toString();
+            let buffer = Buffer.from(stringified);
+            if (onlyHead === true) {
+                response.body = undefined;
+            } else {
+                response.body = buffer;
+            }
+            response.headers['Content-Type'] = 'application/json; charset=UTF-8';
+            response.headers['Content-Length'] = buffer.byteLength.toString();
         } else {
+            response.body = undefined;
             response.headers['Content-Length'] = '0';
         }
         return response;
@@ -240,7 +247,7 @@ class ApiController {
                     return [allowedOrigins[0], true, false];
                 }
             } else {
-                return [allowedOrigins[0], true, false];
+                return [allowedOrigins[0], true, true];
             }
         } else {
             return ['*', false, true];

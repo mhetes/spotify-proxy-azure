@@ -11,14 +11,19 @@ function Example(): JSX.Element {
             if (loading) {
                 setLoading(false);
             }
-            let res = await fetch('/api/GetMessage', {
-                method: 'GET'
+            let res = await fetch('/api/test', {
+                method: 'POST',
+                body: JSON.stringify({data: 'xxx'}),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
             });
             if (!res.ok) {
                 throw new Error('Not success response');
             }
-            let data = await res.text();
-            setResponse(data);
+            let data = await res.json();
+            setResponse(data.message);
         } catch (e) {
             console.error('GetMessage fetch failed:');
             console.error(e);
