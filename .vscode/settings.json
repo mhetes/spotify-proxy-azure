@@ -1,0 +1,24 @@
+{
+    "liveServer.settings.host": "localhost",
+    "liveServer.settings.port": 3000,
+    "liveServer.settings.root": "/build",
+    "liveServer.settings.NoBrowser": true,
+    "liveServer.settings.donotShowInfoMsg": true,
+    "liveServer.settings.file": "index.html",
+    "liveServer.settings.proxy": {
+        "enable": true,
+        "baseUri": "/api",
+        "proxyUri": "http://localhost:7071/api"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/mix-manifest.json": true,
+        "**/package-lock.json": true,
+    },
+    "azureFunctions.deploySubpath": "api",
+    "azureFunctions.postDeployTask": "ApiInstallDeps",
+    "azureFunctions.projectLanguage": "TypeScript",
+    "azureFunctions.projectRuntime": "~3",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.preDeployTask": "ApiPrune"
+}

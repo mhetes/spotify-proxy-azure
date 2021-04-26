@@ -1,0 +1,73 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "StartServer",
+            "type": "process",
+            "command": "${input:startServer}"
+        },
+        {
+            "label": "StopServer",
+            "type": "process",
+            "command": "${input:stopServer}"
+        },
+        {
+            "label": "BuildAll",
+            "type": "shell",
+            "command": "npm run dev",
+            "dependsOn": "ApiBuild",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "ApiStart",
+            "type": "shell",
+            "command": "func.cmd host start",
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            }
+        },
+        {
+            "label": "ApiBuild",
+            "type": "shell",
+            "command": "npm run build",
+            "dependsOn": "ApiInstallDeps",
+            "problemMatcher": "$tsc",
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            }
+        },
+        {
+            "label": "ApiInstallDeps",
+            "type": "shell",
+            "command": "npm install",
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            }
+        },
+        {
+            "label": "ApiPrune",
+            "type": "shell",
+            "command": "npm prune --production",
+            "dependsOn": "ApiBuild",
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/api"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "startServer",
+            "type": "command",
+            "command": "extension.liveServer.goOnline"
+        },
+        {
+            "id": "stopServer",
+            "type": "command",
+            "command": "extension.liveServer.goOffline"
+        }
+    ]
+}
