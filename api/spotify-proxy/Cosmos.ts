@@ -12,8 +12,10 @@ export interface DbPlayer {
     spotify_token: string;
     spotify_expire: Date;
     spotify_refresh: string;
-    collaboration_code: string;
     spotify_country: string;
+    spotify_user_id: string;
+    spotify_user_name: string;
+    player_code: string;
 }
 
 export interface DbListener {
@@ -31,8 +33,10 @@ function PlayerInput(item: DbPlayer): DbPlayer {
         spotify_token: (!item || !item.spotify_token || typeof item.spotify_token !== 'string') ? '' : item.spotify_token,
         spotify_expire: (!item || !item.spotify_expire || !(item.spotify_expire instanceof Date)) ? new Date() : item.spotify_expire,
         spotify_refresh: (!item || !item.spotify_refresh || typeof item.spotify_refresh !== 'string') ? '' : item.spotify_refresh,
-        collaboration_code: (!item || !item.collaboration_code || typeof item.collaboration_code !== 'string') ? '' : item.collaboration_code,
-        spotify_country: (!item || !item.spotify_country || typeof item.spotify_country !== 'string') ? '' : item.spotify_country
+        spotify_country: (!item || !item.spotify_country || typeof item.spotify_country !== 'string') ? '' : item.spotify_country,
+        spotify_user_id: (!item || !item.spotify_user_id || typeof item.spotify_user_id !== 'string') ? '' : item.spotify_user_id,
+        spotify_user_name: (!item || !item.spotify_user_name || typeof item.spotify_user_name !== 'string') ? '' : item.spotify_user_name,
+        player_code: (!item || !item.player_code || typeof item.player_code !== 'string') ? '' : item.player_code        
     } as DbPlayer;
 }
 
@@ -46,8 +50,10 @@ function PlayerOutput(item: DbPlayer | undefined): DbPlayer | undefined {
             spotify_token: item.spotify_token,
             spotify_expire: new Date(item.spotify_expire),
             spotify_refresh: item.spotify_refresh,
-            collaboration_code: item.collaboration_code,
-            spotify_country: item.spotify_country
+            spotify_country: item.spotify_country,
+            spotify_user_id: item.spotify_user_id,
+            spotify_user_name: item.spotify_user_name,
+            player_code: item.player_code            
         } as DbPlayer;
     }
 }

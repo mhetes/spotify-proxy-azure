@@ -78,13 +78,12 @@ class HttpRequest {
         return new Promise<IHttpResponse>((resolve) => {
             let http = (this.options.protocol === 'http:') ? httplib : httpslib;
             let req = http.request(this.options, (res) => {
-                let status = res.statusCode;
                 let resData = [] as Uint8Array[];
                 res.on('data', (chunk) => { resData.push(chunk); });
                 res.on('end', () => {
                     let resBody = undefined as object | undefined;
                     try {
-                        JSON.parse(Buffer.concat(resData).toString('utf8'));
+                        resBody = JSON.parse(Buffer.concat(resData).toString('utf8'));
                     } catch (e) {
                         resBody = undefined;
                     }

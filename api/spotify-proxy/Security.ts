@@ -11,6 +11,7 @@ export interface IAuthentication {
     Role: ERole | 'Unauthenticated';
     PlayerId: string;
     ListenerId: string | undefined;
+    Bearer: string | undefined;
 }
 
 export class Security {
@@ -62,7 +63,8 @@ export class Security {
             return {
                 Role: 'Unauthenticated',
                 PlayerId: context.invocationId,
-                ListenerId: context.invocationId
+                ListenerId: context.invocationId,
+                Bearer: undefined
             } as IAuthentication;
         }
         try {
@@ -73,14 +75,16 @@ export class Security {
                 return {
                     Role: 'Unauthenticated',
                     PlayerId: context.invocationId,
-                    ListenerId: context.invocationId
+                    ListenerId: context.invocationId,
+                    Bearer: bearer
                 } as IAuthentication;
             }
             context.log.info(`Decoded Bearer: ${JSON.stringify(decoded)}`);
             return {
                 Role: decoded['role'],
                 PlayerId: decoded['player'],
-                ListenerId: decoded['listener']
+                ListenerId: decoded['listener'],
+                Bearer: bearer
             } as IAuthentication;
         } catch (e) {
             context.log.warn(`WARNING: Failed to verify JWT token with exception: `);
@@ -88,8 +92,19 @@ export class Security {
             return {
                 Role: 'Unauthenticated',
                 PlayerId: context.invocationId,
-                ListenerId: context.invocationId
+                ListenerId: context.invocationId,
+                Bearer: undefined
             } as IAuthentication;
         }
+    }
+
+    public static RandomString(length: number): string {
+        let result = '';
+        let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
     }
 }
