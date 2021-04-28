@@ -1,4 +1,4 @@
-export default function Header(): JSX.Element {
+export default function Header() {
     return (
         <div id="header">
             <div id="logo">

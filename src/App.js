@@ -12,7 +12,7 @@ import Listener from './Listener';
 import NotFound from './NotFound';
 import Header from './components/Header';
 
-export default function App(): JSX.Element {
+export default function App() {
     return (
         <>
             <Header key="header" />
