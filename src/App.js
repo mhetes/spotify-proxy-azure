@@ -1,4 +1,5 @@
-import { Button, Classes, Text, H1 } from '@blueprintjs/core';
+import { Button, Classes, Text, H1, H3, Callout, Card, Elevation } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import 'normalize.css/normalize.css'
@@ -12,35 +13,42 @@ export default function App() {
 
             <div id="main">
                 <div id="page">
-                    <div className={Classes.OVERLAY_SCROLL_CONTAINER}>aefef</div>
-                    <H1>Heading</H1>
-                    <Text className={Classes.LARGE}>sdsdsd</Text>
-                    <Button icon="add" large intent="success" style={{width: 150, height: 80}}>Pridať</Button><br />
-                    <Button icon="add" large intent="primary" style={{width: 150, height: 80}}>Detail</Button>
-                SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            XXXX<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSS
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
-            SSSSS<br />
+                    
+                    
+                    <br />
+                    <Callout title="Spotify Proxy" intent="primary">
+                        Aplikácia Spotify Proxy slúži na zdieľanie funkcionality <strong>Pridaj do Zoznamu</strong> (Add&nbsp;to&nbsp;Queue) aktívneho Spotify prehrávača (na PC, mobile alebo webe).<br /><br />
+                        <strong>Postup:</strong>
+                        <ul>
+                            <li>Klikni na tlačidlo <strong>Prihlásenie do Spotify Proxy</strong></li>
+                            <li><strong>Prihlásiš</strong> sa do svojho <strong>Spotify účtu</strong></li>
+                            <li>Autorizuješ aplikáciu <strong>Spotify Proxy</strong> kliknutím na tlačidlo <strong>Súhlasím</strong></li>
+                            <li>Po presmerovaní späť na web <strong>Spotify Proxy</strong> sa zobrazí <strong>QR Kód</strong></li>
+                            <li>Tento QR Kód si <strong>naskenujú mobilom</strong> tvoji kamoši</li>
+                            <li>Kód obsahuje web adresu do <strong>Spotify Proxy</strong> ktorú si otvoria v prehliadači</li>
+                            <li>Dostanú sa na stránku kde budú môcť <strong>vyhľadávať pesničky</strong> na Spotify</li>
+                            <li>A tie <strong>Pridávať do Zoznamu</strong> tvojho aktívneho Spotify prehrávača</li>
+                        </ul>
+                    </Callout>
+                    <br />
+                    <Callout title="Dôležité upozornenie" intent="warning">
+                        Pre správnu funkcionalitu Pridaj do Zoznamu pomocou Spotify Proxy je nutné:
+                        <ul>
+                            <li>Mať predplatené Spotify Premium</li>
+                            <li>Prehrávanie v Spotify aplikácii musí bežať</li>
+                        </ul>
+                        <strong>Inak Spotify Proxy nebude pracovať správne!</strong>
+                    </Callout>
+                    <br />
+                    <Card interactive={true} elevation={Elevation.FOUR}>
+                        <H3>Prihlásenie do Spotify Proxy</H3>
+                        <div id="spotify_login">
+                            <img src="/spotify_logo.png" alt="Spotify prihlásenie" />
+                            <span>Login</span>
+                        </div>
+                        
+                    </Card>
+                   
                     </div>
                 </div>
 

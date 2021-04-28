@@ -42,11 +42,34 @@ body {
     min-width: 300px;
     max-width: 600px;
     margin: 0 auto;
-    height: calc(100vh - 120px);
-    overflow: hidden;
+    /*height: calc(100vh - 120px);
+    overflow: hidden;*/
     padding: 20px;
 }
 
 #main #page {
     height: 100%;
+}
+
+#spotify_login {
+    height: 120px;
+    padding-top: 20px;
+}
+
+#spotify_login img {
+    display: block;
+    float: left;
+    width: 333px;
+    height: 100px;
+    margin: 0;
+}
+
+#spotify_login span {
+    display: block;
+    float: left;
+    font-family: sans-serif, Helvetica, Arial;
+    font-weight: bold;
+    font-size: 4.6em;
+    color: #1ED760;
+    padding-top: 10px;
 }
