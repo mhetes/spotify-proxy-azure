@@ -1,5 +1,4 @@
-import { Button, Classes, Text, H1, H3, Callout, Card, Elevation } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { Text, H3, Callout, Card, Elevation } from '@blueprintjs/core';
 import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import 'normalize.css/normalize.css'
@@ -10,11 +9,8 @@ export default function App() {
     return (
         <>
             <Header key="header" />
-
             <div id="main">
                 <div id="page">
-                    
-                    
                     <br />
                     <Callout title="Spotify Proxy" intent="primary">
                         Aplikácia Spotify Proxy slúži na zdieľanie funkcionality <strong>Pridaj do Zoznamu</strong> (Add&nbsp;to&nbsp;Queue) aktívneho Spotify prehrávača (na PC, mobile alebo webe).<br /><br />
@@ -45,24 +41,20 @@ export default function App() {
                         <div id="spotify_login">
                             <img src="/spotify_logo.png" alt="Spotify prihlásenie" />
                             <span>Login</span>
-                        </div>
-                        
+                        </div>                        
                     </Card>
-                   
-                    </div>
+                    <br />
+                    <Card interactive={true} elevation={Elevation.FOUR}>
+                        <H3>Aktívne prihlásenie - Prehrávač</H3>
+                        <Text className="user_logged">Martin Heteš</Text>                    
+                    </Card>
+                    <br />
+                    <Card interactive={true} elevation={Elevation.FOUR}>
+                        <H3>Aktívne prihlásenie - Poslucháč prehrávača</H3>
+                        <Text className="user_logged">Martin Heteš</Text>                    
+                    </Card>
                 </div>
-
-            
+            </div>
         </>
-        
     );
 }
-/*
-document.onreadystatechange = () => {
-    if (document.readyState === 'complete') {
-        if (document.getElementById('root')) {
-            ReactDOM.render(<App />, document.getElementById('root'));
-        }
-    }
-}
-*/
