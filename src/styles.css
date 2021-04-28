@@ -80,3 +80,16 @@ body {
     font-size: 3em;
     color: #1ED760;
 }
+
+#qr_code {
+    width: 300px;
+    padding: 25px;
+    margin: 50px auto;
+    background-color: white;
+}
+
+.logout_button {
+    float: right;
+    width: 120px;
+    height: 40px;
+}
