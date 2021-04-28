@@ -14,7 +14,7 @@
         {
             "label": "BuildAll",
             "type": "shell",
-            "command": "npm run dev",
+            "command": "npm run build",
             "dependsOn": "ApiBuild",
             "group": {
                 "kind": "build",

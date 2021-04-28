@@ -1,28 +1,67 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Alignment, Navbar, Button, Icon, Classes, Text, H1 } from '@blueprintjs/core';
+import '@blueprintjs/core/lib/css/blueprint.css'
+import '@blueprintjs/icons/lib/css/blueprint-icons.css'
+import 'normalize.css/normalize.css'
+import './styles.css'
 import Home from './Home';
 import Player from './Player';
 import Listener from './Listener';
 import NotFound from './NotFound';
+import Header from './components/Header';
 
-if (document.getElementById('root')) {
-    ReactDOM.render(
-        <BrowserRouter>
-            <Switch>
-                <Route exact path='/'>
-                    <Home />
-                </Route>
-                <Route exact path='/Player'>
-                    <Player />
-                </Route>
-                <Route exact path='/Listener'>
-                    <Listener />
-                </Route>
-                <Route>
-                    <NotFound />
-                </Route>
-            </Switch>
-        </BrowserRouter>
-    , document.getElementById('root'));
+export default function App(): JSX.Element {
+    return (
+        <>
+            <Header key="header" />
+
+            <div id="main">
+                <div id="page">
+                    <div className={Classes.OVERLAY_SCROLL_CONTAINER}>aefef</div>
+                    <H1>Heading</H1>
+                    <Text className={Classes.LARGE}>sdsdsd</Text>
+                    <Button icon="add" large intent="success" style={{width: 150, height: 80}}>Pridať</Button><br />
+                    <Button icon="add" large intent="primary" style={{width: 150, height: 80}}>Detail</Button>
+                SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            XXXX<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSS
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+            SSSSS<br />
+                    </div>
+                </div>
+
+            
+        </>
+        
+    );
 }
+/*
+document.onreadystatechange = () => {
+    if (document.readyState === 'complete') {
+        if (document.getElementById('root')) {
+            ReactDOM.render(<App />, document.getElementById('root'));
+        }
+    }
+}
+*/

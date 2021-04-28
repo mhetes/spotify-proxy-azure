@@ -9,3 +9,6 @@
 # misc
 mix-manifest.json
 package-lock.json
+
+# React bug
+src/react-app-env.d.ts
