@@ -13,7 +13,7 @@ if (fs.existsSync(buildDir)) {
 // Compile React & CSS files
 mix.ts('src/app.tsx', 'build')
     .react()
-    .sass('src/styles.scss', 'build')
+    .sass('src/styles.scss', 'build', { implementation: require('node-sass') })
     .copyDirectory('public', 'build')
     .disableNotifications()
     .sourceMaps(false, 'source-map')

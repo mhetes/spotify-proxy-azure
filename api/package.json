@@ -6,7 +6,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "test": "echo \"No tests yet...\"",
+    "update": "updates --update --minor && npm install",
+    "updatemajor": "updates --update --major && npm install"
   },
   "dependencies": {
     "@azure/cosmos": "^3.11.0",
@@ -17,6 +19,7 @@
     "@azure/functions": "^1.2.3",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/uuid": "^8.3.0",
-    "typescript": "^4.0.0"
+    "typescript": "^4.2.4",
+    "updates": "^12.0.2"
   }
 }
