@@ -1,15 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { Alignment, Navbar, Button, Icon, Classes, Text, H1 } from '@blueprintjs/core';
+import { Button, Classes, Text, H1 } from '@blueprintjs/core';
 import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import 'normalize.css/normalize.css'
 import './styles.css'
-import Home from './Home';
-import Player from './Player';
-import Listener from './Listener';
-import NotFound from './NotFound';
 import Header from './components/Header';
 
 export default function App() {
