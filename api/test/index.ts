@@ -6,7 +6,8 @@ const doGet = async (context: Context, authentication: IAuthentication): Promise
     return {
         status: 200,
         body: {
-            message: 'Successful GET occured!'
+            message: 'Successful GET occured!',
+            envs: process.env
         }
     }
 };
