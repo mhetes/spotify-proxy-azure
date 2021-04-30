@@ -154,15 +154,15 @@ class ApiController {
             if (route.AuthenticationRequired) {
                 let authHeader = this.getHeader('Authorization', context);
                 if (!authHeader) {
-                    return this.errorResponse(401, `Server required authentication for this request!`, context, response);
+                    return this.errorResponse(401, `Server required authentication for this request (No Header)!`, context, response);
                 }
                 if (authHeader.toUpperCase().substr(0, 7) !== 'BEARER ') {
-                    return this.errorResponse(401, `Server required authentication for this request!`, context, response);
+                    return this.errorResponse(401, `Server required authentication for this request (No Bearer)!`, context, response);
                 }
                 let bearer = authHeader.substr(7);
                 authentication = Security.VerifyAuthentication(bearer, context);
                 if (!authentication || !authentication.Role || !authentication.PlayerId || authentication.Role === 'Unauthenticated' || (authentication.Role === ERole.Listener && !authentication.ListenerId)) {
-                    return this.errorResponse(401, `Server required authentication for this request!`, context, response);
+                    return this.errorResponse(401, `Server required authentication for this request (Verification failed)!`, context, response);
                 }
             }
             // Roles check
@@ -257,7 +257,7 @@ class ApiController {
     private getAllowedMethods(): string {
         const addMethod = (currentMethods: string, newMethod: string): string => {
             let newMethods = currentMethods;
-            if (newMethods != '') {
+            if (newMethods !== '') {
                 newMethods += ', ';
             }
             newMethods += newMethod;
