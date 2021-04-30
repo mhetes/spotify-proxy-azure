@@ -19,7 +19,7 @@ class HttpRequest {
                 protocol: pUrl.protocol,
                 hostname: pUrl.hostname,
                 port: (pUrl.protocol === 'http:') ? ((!pUrl.port) ? 80 : pUrl.port) : ((!pUrl.port) ? 443 : pUrl.port),
-                path: pUrl.pathname,
+                path: pUrl.pathname + ((pUrl.search) ? pUrl.search : ''),
                 method: method,
                 timeout: 5000,
                 headers: {

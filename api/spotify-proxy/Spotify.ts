@@ -172,6 +172,8 @@ export class Spotify {
         try {
             let req = httpPost(`https://api.spotify.com/v1/me/player/queue?uri=${encodeURIComponent('spotify:track:' + track_id)}`)
                 .authBearer(player_token)
+                .header('Content-Type', 'application/json')
+                .header('Content-Length', '0')
                 .execute();
             let res = await req;
             if (res.status === 204) {

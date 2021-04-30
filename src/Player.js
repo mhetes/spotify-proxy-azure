@@ -17,6 +17,10 @@ export default function Player() {
             window.location.href = '/';
             return;
         }
+        if (new URL(window.location.href).pathname !== '/Player/') {
+            window.location.href = '/Player/';
+            return;
+        }
         setListenerUrl(`${new URL(window.location.href).origin}/Listener/?player_id=${playerAuth.player_id}&player_code=${playerAuth.player_code}`);
         setLoading(false);
     }, [playerAuth, setListenerUrl, setLoading]);

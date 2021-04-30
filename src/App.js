@@ -66,7 +66,7 @@ export default function App() {
                 code: url.searchParams.get('code'),
                 callback_or_player_id: url.origin + '/Player/'
             };
-            console.info(`Executing POST /api/authentication with payload: ${JSON.stringify(loginPayload, undefined, 2)}`);
+            console.info(`Executing POST /api/authentication`);
             try {
                 let loginRes = await fetch(`/api/authentication`, {
                     method: 'POST',
@@ -77,12 +77,14 @@ export default function App() {
                     body: JSON.stringify(loginPayload)
                 });
                 if (!loginRes.ok) {
-                    console.log('Error payload: ' + JSON.stringify(await loginRes.json()));
+                    console.log('Input Payload: ' + JSON.stringify(loginPayload, undefined, 2));
+                    console.log('Error response: ' + JSON.stringify(await loginRes.json(), undefined, 2));
                     throw new Error(`Invalid HTTP Status ${loginRes.status}!`);
                 }
                 let data = await loginRes.json();
-                console.info(`POST /api/authentication returned payload: ${JSON.stringify(data)}`);
+                console.info(`POST /api/authentication finished`);
                 if (!data || !data['bearer_token'] || !data['spotify_token'] || !data['spotify_expire'] || !data['spotify_country'] || !data['spotify_user_id'] || !data['spotify_user_name'] || !data['player_id'] || !data['player_code']) {
+                    console.info(`Payload: ${JSON.stringify(data)}`);
                     throw new Error(`Invalid JSON response - missing fields!`);
                 }
                 let auth = new PlayerAuthentication({
@@ -114,7 +116,7 @@ export default function App() {
                 code: url.searchParams.get('player_code'),
                 callback_or_player_id: url.searchParams.get('player_id')
             };
-            console.info(`Executing POST /api/authentication with payload: ${JSON.stringify(loginPayload, undefined, 2)}`);
+            console.info(`Executing POST /api/authentication`);
             try {
                 let loginRes = await fetch(`/api/authentication`, {
                     method: 'POST',
@@ -125,12 +127,14 @@ export default function App() {
                     body: JSON.stringify(loginPayload)
                 });
                 if (!loginRes.ok) {
-                    console.log('Error payload: ' + JSON.stringify(await loginRes.json()));
+                    console.log('Input Payload: ' + JSON.stringify(loginPayload, undefined, 2));
+                    console.log('Error response: ' + JSON.stringify(await loginRes.json(), undefined, 2));
                     throw new Error(`Invalid HTTP Status ${loginRes.status}!`);
                 }
                 let data = await loginRes.json();
-                console.info(`POST /api/authentication returned payload: ${JSON.stringify(data)}`);
+                console.info(`POST /api/authentication finished`);
                 if (!data || !data['bearer_token'] || !data['spotify_token'] || !data['spotify_expire'] || !data['spotify_country'] || !data['spotify_user_id'] || !data['spotify_user_name']) {
+                    console.info(`Payload: ${JSON.stringify(data)}`);
                     throw new Error(`Invalid JSON response - missing fields!`);
                 }
                 let auth = new ListenerAuthentication({
@@ -168,7 +172,7 @@ export default function App() {
      * @type {() => Promise<PlayerAuthentication | null>}
      */
     const RefreshPlayerAuthentication = React.useCallback(async () => {
-        console.info(`Executing GET /api/authentication with Player Bearer`);
+        console.info(`Executing GET /api/authentication started with Player Bearer`);
         try {
             let fetchRes = await fetch(`/api/authentication`, {
                 method: 'GET',
@@ -182,8 +186,9 @@ export default function App() {
                 throw new Error(`Invalid HTTP Status ${fetchRes.status}!`);
             }
             let data = await fetchRes.json();
-            console.info(`GET /api/authentication returned payload: ${JSON.stringify(data)}`);
+            console.info(`GET /api/authentication finished`);
             if (!data || !data['bearer_token'] || !data['spotify_token'] || !data['spotify_expire'] || !data['spotify_country'] || !data['spotify_user_id'] || !data['spotify_user_name'] || !data['spotify_user_name'] || !data['player_id'] || !data['player_code']) {
+                console.info(`Payload: ${JSON.stringify(data)}`);
                 throw new Error(`Invalid JSON response - missing fields!`);
             }
             return new PlayerAuthentication({
@@ -207,7 +212,7 @@ export default function App() {
      * @type {() => Promise<ListenerAuthentication | null>}
      */
     const RefreshListenerAuthentication = React.useCallback(async () => {
-        console.info(`Executing GET /api/authentication with Listener Bearer`);
+        console.info(`Executing GET /api/authentication started with Listener Bearer`);
         try {
             let fetchRes = await fetch(`/api/authentication`, {
                 method: 'GET',
@@ -221,8 +226,9 @@ export default function App() {
                 throw new Error(`Invalid HTTP Status ${fetchRes.status}!`);
             }
             let data = await fetchRes.json();
-            console.info(`GET /api/authentication returned payload: ${JSON.stringify(data)}`);
+            console.info(`GET /api/authentication finished`);
             if (!data || !data['bearer_token'] || !data['spotify_token'] || !data['spotify_expire'] || !data['spotify_country'] || !data['spotify_user_id'] || !data['spotify_user_name'] || !data['spotify_user_name']) {
+                console.info(`Payload: ${JSON.stringify(data)}`);
                 throw new Error(`Invalid JSON response - missing fields!`);
             }
             return new ListenerAuthentication({
