@@ -162,11 +162,7 @@ class ApiController {
                 let bearer = authHeader.substr(7);
                 authentication = Security.VerifyAuthentication(bearer, context);
                 if (!authentication || !authentication.Role || !authentication.PlayerId || authentication.Role === 'Unauthenticated' || (authentication.Role === ERole.Listener && !authentication.ListenerId)) {
-                    return {
-                        status: 401,
-                        body: authentication
-                    }
-                    // return this.errorResponse(401, `Server required authentication for this request!`, context, response);
+                    return this.errorResponse(401, `Server required authentication for this request!`, context, response);
                 }
             }
             // Roles check

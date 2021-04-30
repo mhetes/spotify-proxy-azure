@@ -42,7 +42,7 @@ export class Security {
             return undefined;
         }
         try {
-            let bearer = sign({ role: role, player: playerId, listener: listenerId }, secret);
+            let bearer = sign({ role: role, player: playerId, listener: listenerId }, Buffer.from(secret, 'base64'));
             if (!bearer) {
                 context.log.error(`ERROR: JWT Sign returned empty bearer`);
                 return undefined;
@@ -68,7 +68,7 @@ export class Security {
             } as IAuthentication;
         }
         try {
-            let decoded = verify(bearer, secret);
+            let decoded = verify(bearer, Buffer.from(secret, 'base64'));
             if (!decoded['player'] || !decoded['role'] || (decoded['role'] !== ERole.Player && decoded['role'] !== ERole.Listener)) {
                 context.log.warn(`WARNING: Token verification successful but payload is incomplete: `);
                 context.log.warn(decoded);
