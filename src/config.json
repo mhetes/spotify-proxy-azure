@@ -1,0 +1,4 @@
+{
+    "SP_SPOTIFY_APP_CODE": "8dae15e704704729b21f2fd3cca9a462",
+    "SP_SPOTIFY_SCOPES": "user-read-currently-playing user-read-playback-state user-modify-playback-state user-read-private"
+}

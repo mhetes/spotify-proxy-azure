@@ -1,5 +1,5 @@
 import { Context } from '@azure/functions';
-import { GetSpotifyAppCode, GetSpotifyAppSecret, GetSpotifyAppCallback } from './EnvironmentVariables';
+import { GetSpotifyAppCode, GetSpotifyAppSecret } from './EnvironmentVariables';
 import { httpGet, httpPost } from './HttpClient';
 
 function throwIfMissingVariables(context: Context) {
@@ -11,10 +11,6 @@ function throwIfMissingVariables(context: Context) {
     if (!GetSpotifyAppSecret()) {
         doThrow = true;
         context.log.error(`Missing Environment variable for: SpotifyAppSecret`);
-    }
-    if (!GetSpotifyAppCallback()) {
-        doThrow = true;
-        context.log.error(`Missing Environment variable for: SpotifyAppCallback`);
     }
     if (doThrow) {
         throw new Error(`Missing Spotify Configuration!`);
@@ -48,7 +44,7 @@ interface SpotifyUserProfile {
 
 export class Spotify {
 
-    public static async AuthenticateWithCodeFlow(code: string, context: Context): Promise<SpotifyUserCredentials> {
+    public static async AuthenticateWithCodeFlow(code: string, callback_uri: string, context: Context): Promise<SpotifyUserCredentials> {
         context.log.info(`Spotify.AuthenticateWithCodeFlow('${code}')`);
         throwIfMissingVariables(context);
         try {
@@ -57,7 +53,7 @@ export class Spotify {
                 .sendFormData({
                     grant_type: 'authorization_code',
                     code: code,
-                    redirect_uri: GetSpotifyAppCallback()
+                    redirect_uri: callback_uri
                 }).execute();
             let res = await req;
             if (res.status < 200 || res.status >= 300) {

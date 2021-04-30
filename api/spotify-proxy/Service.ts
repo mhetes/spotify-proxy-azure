@@ -3,11 +3,12 @@ import { Response, ErrorMessage } from './ApiController';
 import { ERole, IAuthentication, Security } from './Security';
 import { Spotify } from './Spotify';
 import { DbPlayer, DbListener, Cosmos } from './Cosmos';
+import { GetSpotifyAppCallbacks } from './EnvironmentVariables'
 
 interface AuthenticationRequest {
     type: ERole;
     code: string;
-    player_id?: string;
+    callback_or_player_id?: string;
 }
 
 interface AuthenticationResponse {
@@ -15,6 +16,9 @@ interface AuthenticationResponse {
     spotify_token: string;
     spotify_expire: Date;
     spotify_country: string;
+    spotify_user_id: string;
+    spotify_user_name: string;
+    player_id?: string;
     player_code?: string;
 }
 
@@ -43,8 +47,22 @@ export class Service {
             context.log.warn(`Invalid authentication code specified!`);
             return errorRes(400, 'Invalid authentication code specified!', context);
         }
+        if (!req.callback_or_player_id || typeof req.callback_or_player_id !== 'string') {
+            context.log.warn(`Invalid authentication callback or player_uri specified!`);
+            return errorRes(400, 'Invalid authentication callback or player_uri specified!', context);
+        }
         if (req.type === ERole.Player) {
-            let spotifyAuth = await Spotify.AuthenticateWithCodeFlow(req.code, context);
+            let allCallbacks = GetSpotifyAppCallbacks();
+            if (!allCallbacks) {
+                context.log.warn(`Failed to verify authentication!`);
+                return errorRes(500, 'Failed to verify authentication!', context);
+            }
+            let callbacksArr = allCallbacks.split(',');
+            if (!callbacksArr.includes(req.callback_or_player_id)) {
+                context.log.warn(`Invalid callback URI specified!`);
+                return errorRes(400, 'Invalid callback URI specified!', context);
+            }
+            let spotifyAuth = await Spotify.AuthenticateWithCodeFlow(req.code, req.callback_or_player_id, context);
             if (!spotifyAuth) {
                 context.log.warn(`Spotify Authentication failed!`);
                 return errorRes(502, 'Spotify Authentication failed!', context);
@@ -84,20 +102,19 @@ export class Service {
                     spotify_token: created_player.spotify_token,
                     spotify_expire: created_player.spotify_expire,
                     spotify_country: created_player.spotify_country,
+                    spotify_user_id: created_player.spotify_user_id,
+                    spotify_user_name: created_player.spotify_user_name,
+                    player_id: created_player.id,
                     player_code: created_player.player_code
                 } as AuthenticationResponse
             };
         } else if (req.type === ERole.Listener) {
-            if (!req.player_id) {
-                context.log.warn(`Player Id missing!`);
-                return errorRes(400, 'Player Id missing!', context);
-            }
-            let [found_player, spotify_credentials] = await Promise.all([Cosmos.GetPlayer(req.player_id, context), Spotify.AuthenticateWithClientCredentials(context)]);
+            let [found_player, spotify_credentials] = await Promise.all([Cosmos.GetPlayer(req.callback_or_player_id, context), Spotify.AuthenticateWithClientCredentials(context)]);
             if (!found_player) {
                 context.log.warn(`Player Not Found!`);
                 return errorRes(400, 'Player Not Found!', context);
             }
-            if (found_player.player_code !== req.player_id) {
+            if (found_player.player_code !== req.code) {
                 context.log.warn(`Invalid Player Authentication Code!`);
                 return errorRes(400, 'Invalid Player Authentication Code!', context);
             }
@@ -107,7 +124,7 @@ export class Service {
             }
             let listener_data = {
                 record: 'Listener',
-                player_id: req.player_id,
+                player_id: req.callback_or_player_id,
                 spotify_token: spotify_credentials.AccessToken,
                 spotify_expire: spotify_credentials.TokenValidUntil
             } as DbListener;
@@ -116,7 +133,7 @@ export class Service {
                 context.log.warn(`Create Listener failed!`);
                 return errorRes(500, 'Create Listener failed!', context);
             }
-            let listener_bearer = Security.CreateAuthentication(ERole.Listener, req.player_id, created_listener.id, context);
+            let listener_bearer = Security.CreateAuthentication(ERole.Listener, req.callback_or_player_id, created_listener.id, context);
             if (!listener_bearer) {
                 context.log.warn(`Failed to Create Listener Authentication!`);
                 return errorRes(500, 'Failed to Create Listener Authentication!', context);
@@ -127,7 +144,9 @@ export class Service {
                     bearer_token: listener_bearer,
                     spotify_token: created_listener.spotify_token,
                     spotify_expire: created_listener.spotify_expire,
-                    spotify_country: found_player.spotify_country
+                    spotify_country: found_player.spotify_country,
+                    spotify_user_id: found_player.spotify_user_id,
+                    spotify_user_name: found_player.spotify_user_name,
                 } as AuthenticationResponse
             };
         } else {
@@ -142,7 +161,7 @@ export class Service {
             let found_player = await Cosmos.GetPlayer(authentication.PlayerId, context);
             if (!found_player) {
                 context.log.warn(`Player no longer exists!`);
-                return errorRes(401, 'Player no longer exists!', context);
+                return errorRes(404, 'Player no longer exists!', context);
             }
             if (new Date(Date.now() + 600000) > found_player.spotify_expire) {
                 let refreshed_credentials = await Spotify.AuthenticationRefreshFlow(found_player.spotify_refresh, context);
@@ -165,6 +184,9 @@ export class Service {
                     spotify_token: found_player.spotify_token,
                     spotify_expire: found_player.spotify_expire,
                     spotify_country: found_player.spotify_country,
+                    spotify_user_id: found_player.spotify_user_id,
+                    spotify_user_name: found_player.spotify_user_name,
+                    player_id: found_player.id,
                     player_code: found_player.player_code
                 } as AuthenticationResponse
             };
@@ -172,7 +194,7 @@ export class Service {
             let [found_player, found_listener] = await Promise.all([Cosmos.GetPlayer(authentication.PlayerId, context), Cosmos.GetListener(authentication.ListenerId, context)]);
             if (!found_player || !found_listener) {
                 context.log.warn(`Listener or Player no longer exists!`);
-                return errorRes(401, 'Listener or Player no longer exists!', context);
+                return errorRes(404, 'Listener or Player no longer exists!', context);
             }
             if (new Date(Date.now() + 600000) > found_listener.spotify_expire) {
                 let client_credentials = await Spotify.AuthenticateWithClientCredentials(context);
@@ -194,6 +216,8 @@ export class Service {
                     bearer_token: authentication.Bearer,
                     spotify_token: found_listener.spotify_token,
                     spotify_expire: found_listener.spotify_expire,
+                    spotify_user_id: found_player.spotify_user_id,
+                    spotify_user_name: found_player.spotify_user_name,
                     spotify_country: found_player.spotify_country
                 } as AuthenticationResponse
             };
@@ -225,8 +249,11 @@ export class Service {
 
     public static async SpotifyGetCurrentTrack(context: Context, authentication: IAuthentication): Promise<Response> {
         context.log.info(`Service.SpotifyGetCurrentTrack()`);
-        let [found_player, found_listener] = await Promise.all([Cosmos.GetPlayer(authentication.PlayerId, context), Cosmos.GetListener(authentication.ListenerId, context)]);
-        if (!found_player || !found_listener) {
+        let [found_player, found_listener] = await Promise.all([
+            Cosmos.GetPlayer(authentication.PlayerId, context),
+            (authentication.Role === ERole.Player) ? Promise.resolve(null) : Cosmos.GetListener(authentication.ListenerId, context)
+        ]);
+        if (!found_player || (authentication.Role === ERole.Listener && !found_listener)) {
             context.log.warn(`Listener or Player no longer exists!`);
             return errorRes(401, 'Listener or Player no longer exists!', context);
         }

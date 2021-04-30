@@ -8,7 +8,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     context.log.info('HTTP Request: ' + JSON.stringify(req, undefined, 2));
     
     let playerApi = CreateApi({ CorsEnabled: true, SecureApis: true })
-        .OnGet(true, ERole.Listener, Service.SpotifyGetCurrentTrack)
+        .OnGet(true, [ERole.Player, ERole.Listener], Service.SpotifyGetCurrentTrack)
         .OnPost(true, ERole.Listener, Service.SpotifyAddTrackToQueue)
         .Build();
 

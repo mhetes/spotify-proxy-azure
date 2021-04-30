@@ -1,40 +1,46 @@
-import { Button, Callout, ProgressBar } from '@blueprintjs/core';
+import React from 'react';
 import QRCode from 'react-qr-code';
+import { Button, Callout } from '@blueprintjs/core';
+import { useAppContext } from './lib/AppContext';
+import Authentication from './components/Authentication';
+import CurrentTrack from './components/CurrentTrack';
+import Loading from './components/Loading';
 
 export default function Player() {
 
+    const { playerAuth } = useAppContext();
+    const [ loading, setLoading ] = React.useState(true);
+    const [ listenerUrl, setListenerUrl ] = React.useState(new URL(window.location.href).origin + '/Listener/');
+
+    React.useEffect(() => {
+        if (!playerAuth || !playerAuth.bearer_token || !playerAuth.player_id || !playerAuth.player_code) {
+            window.location.href = '/';
+            return;
+        }
+        setListenerUrl(`${new URL(window.location.href).origin}/Listener/?player_id=${playerAuth.player_id}&player_code=${playerAuth.player_code}`);
+        setLoading(false);
+    }, [playerAuth, setListenerUrl, setLoading]);
+
     return (
-        <>
-            <Callout title="Prihlásenie do SPOTIFY úspešné" intent="success" >
-                <Button className="logout_button" intent="danger" icon="log-out" onClick={(e) => { window.location.href = '/'; }}>Odhlásiť</Button>
-                <strong>Užívateľ:</strong> Martin Heteš<br />
-                <strong>Krajina:</strong> SK<br />
-                
-            </Callout>
-            <br />
-            <Callout title="Aktuálne prehrávané" intent="none" >
-                <img src="https://i.scdn.co/image/ab67616d000048519c284a6855f4945dc5a3cd73" alt="Cover" style={{float: 'left'}} />
-                <div style={{paddingLeft: 65, margin: 10}}>
-                    <strong>Mr. Brightside</strong><br />
-                    The Killers<br />
-                    <ProgressBar intent="success" animate={true} stripes={true} value={0.6}></ProgressBar>
-                </div>
+        loading ? (<Loading />) : (
+            <>
                 <br />
-            </Callout>
-            <br />
-            <Callout title="QR Kód na zdieľanie Spotify prehrávača" intent="primary" >
-                <div id="qr_code">
-                    <QRCode value="http://localhost:3000/Player/?player_id=sefs4efs684g&amp;code=afsgsrgsekhsekshekseh" size={250} />
-                </div>            
-            </Callout>
-            <br />
-            <Callout title="Link na zdieľanie prehrávača" intent="primary" >
+                <Authentication type='Player' />
+                <CurrentTrack type='Player' />
+                <Callout title='QR Kód na zdieľanie prehrávača' intent='primary' >
+                    <div id='qr_code'>
+                        <QRCode value={listenerUrl} size={250} />
+                    </div>            
+                </Callout>
                 <br />
-                <input type="text" className="bp4-input bp4-fill bp4-large" readOnly value="http://localhost:3000/Player/?player_id=sefs4efs684g&amp;code=afsgsrgsekhsekshekseh"/>
-                <br /><br />
-                <Button intent="none" className="bp4-fill bp4-large" onClick={(e) => { navigator.clipboard.writeText('http://localhost:3000/Player/?player_id=sefs4efs684g&code=afsgsrgsekhsekshekseh') }}>Kopírovať do schránky</Button>
-                <br />
-            </Callout>
-        </>
+                <Callout title='Link na zdieľanie prehrávača' intent='primary' >
+                    <br />
+                    <input type='text' className='bp4-input bp4-fill bp4-large' readOnly value={listenerUrl} />
+                    <br /><br />
+                    <Button intent='none' className='bp4-fill bp4-large' onClick={(e) => { navigator.clipboard.writeText(listenerUrl) }}>Kopírovať do schránky</Button>
+                    <br />
+                </Callout>
+            </>
+        )
     );
 }

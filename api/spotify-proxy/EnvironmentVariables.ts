@@ -14,8 +14,8 @@ export function GetSpotifyAppSecret(): string | undefined {
     return process.env['SP_SPOTIFY_APP_SECRET'];
 }
 
-export function GetSpotifyAppCallback(): string | undefined {
-    return process.env['SP_SPOTIFY_APP_CALLBACK'];
+export function GetSpotifyAppCallbacks(): string | undefined {
+    return process.env['SP_SPOTIFY_APP_CALLBACKS'];
 }
 
 export function GetCosmosEndpoint(): string | undefined {

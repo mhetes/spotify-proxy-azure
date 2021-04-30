@@ -1,8 +1,8 @@
-import React from 'react';
+import Error from './components/Error';
 
 export default function NotFound() {
 
     return (
-        <h1>NOT FOUND</h1>
+        <Error errorMessage='Zvolená stránka neexistuje! Skontroluj zadanú WWW adresu!' />
     );
 }
