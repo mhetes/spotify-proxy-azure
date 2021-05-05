@@ -41,7 +41,7 @@ export default function CurrentTrack(props) {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${bearer}`
+                    'X-SP-Authorization': `Bearer ${bearer}`
                 }
             });
             if (!trackRes.ok) {

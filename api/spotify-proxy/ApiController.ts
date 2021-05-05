@@ -49,7 +49,7 @@ class ApiController {
 
     constructor(routes: IApiRoutes) {
         this.routes = routes;
-        this.corsHeaders = ['Origin', 'X-Requested-With', 'Content-Type', 'Content-Length', 'Accept', 'Authorization'];
+        this.corsHeaders = ['Origin', 'X-Requested-With', 'Content-Type', 'Content-Length', 'Accept', 'X-SP-Authorization'];
     }
 
     public async Execute(context: Context): Promise<HttpResponse> {
@@ -152,7 +152,7 @@ class ApiController {
                 ListenerId: context.invocationId
             } as IAuthentication;
             if (route.AuthenticationRequired) {
-                let authHeader = this.getHeader('Authorization', context);
+                let authHeader = this.getHeader('X-SP-Authorization', context);
                 if (!authHeader) {
                     return this.errorResponse(401, `Server required authentication for this request!`, context, response);
                 }

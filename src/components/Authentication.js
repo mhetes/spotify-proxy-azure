@@ -55,7 +55,7 @@ export default function Authentication(props) {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${bearer}`
+                    'X-SP-Authorization': `Bearer ${bearer}`
                 }
             });
             if (!logoutRes.ok) {

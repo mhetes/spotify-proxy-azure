@@ -36,7 +36,7 @@ export default function SearchResults(props) {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${listenerAuth.bearer_token}`
+                    'X-SP-Authorization': `Bearer ${listenerAuth.bearer_token}`
                 },
                 body: JSON.stringify({ track_id: track_id })
             });

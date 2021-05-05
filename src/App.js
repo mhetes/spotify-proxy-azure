@@ -178,7 +178,7 @@ export default function App() {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${playerAuth.bearer_token}`
+                    'X-SP-Authorization': `Bearer ${playerAuth.bearer_token}`
                 }
             });
             if (!fetchRes.ok) {
@@ -218,7 +218,7 @@ export default function App() {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${listenerAuth.bearer_token}`
+                    'X-SP-Authorization': `Bearer ${listenerAuth.bearer_token}`
                 }
             });
             if (!fetchRes.ok) {
